@@ -20,6 +20,9 @@ const Navbar = () => {
         <Link to='/contact' className='option'>
           CONTACT
         </Link>
+        <Link to='/sign' className='option'>
+          SIGN IN
+        </Link>
       </div>
     </div>
   );
