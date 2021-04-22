@@ -6,7 +6,7 @@ import './sign-in.style.scss';
 import FormInput from '../form-input/FormInput';
 import CustomButton from '../custom-button/CustomButton';
 
-import { signInWithGoogle } from '../../firebase/firebase.utils';
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
 import { withRouter } from 'react-router';
 
 class SignIn extends Component {
@@ -19,10 +19,18 @@ class SignIn extends Component {
     };
   }
 
-  handleOnSubmit = e => {
+  handleOnSubmit = async e => {
+    const { email, password } = this.state;
     e.preventDefault();
 
-    this.setState({ email: '', password: '' });
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+
+      this.setState({ email: '', password: '' });
+      this.props.history.push('/');
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   handleOnChange = e => {
@@ -47,7 +55,6 @@ class SignIn extends Component {
             autoComplete='on'
             type='text'
             name='email'
-            id='email'
             label='Email'
             required
             value={this.state.email}
@@ -57,7 +64,6 @@ class SignIn extends Component {
             autoComplete='on'
             type='password'
             name='password'
-            id='password'
             label='Password'
             required
             value={this.state.password}

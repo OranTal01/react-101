@@ -1,14 +1,16 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import './sign-in-and-sign-up-page.style.scss';
 
 import SignIn from '../../components/sign-in/SignIn';
+import SignUp from '../../components/sign-up/SignUp';
 
 const SignInAndSignUpPage = () => {
   return (
-    <Fragment>
+    <div className='sign-in-and-sign-up'>
       <SignIn />
-    </Fragment>
+      <SignUp />
+    </div>
   );
 };
 
