@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import './sign-in.style.scss';
 
@@ -6,6 +7,7 @@ import FormInput from '../form-input/FormInput';
 import CustomButton from '../custom-button/CustomButton';
 
 import { signInWithGoogle } from '../../firebase/firebase.utils';
+import { withRouter } from 'react-router';
 
 class SignIn extends Component {
   constructor(props) {
@@ -27,6 +29,11 @@ class SignIn extends Component {
     const { name, value } = e.target;
 
     this.setState({ [name]: value });
+  };
+
+  handleSignInWithGoogle = () => {
+    signInWithGoogle();
+    this.props.history.push('/');
   };
 
   render() {
@@ -59,7 +66,7 @@ class SignIn extends Component {
             <CustomButton type='submit'> Sign in </CustomButton>
             <CustomButton
               type='button'
-              onClick={signInWithGoogle}
+              onClick={this.handleSignInWithGoogle}
               isGoogleSignIn>
               Sign in with Google
             </CustomButton>
@@ -70,4 +77,8 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn;
+SignIn.propTypes = {
+  history: PropTypes.object.isRequired,
+};
+
+export default withRouter(SignIn);

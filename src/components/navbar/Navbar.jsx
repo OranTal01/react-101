@@ -1,11 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import './navbar.style.scss';
+import { auth } from '../../firebase/firebase.utils';
 
-const Navbar = () => {
+const Navbar = ({ currentUser }) => {
+  const handleSignOut = () => {
+    auth.signOut();
+  };
+
   return (
     <div className='navbar'>
       <div className='logo-container'>
@@ -20,12 +26,22 @@ const Navbar = () => {
         <Link to='/contact' className='option'>
           CONTACT
         </Link>
-        <Link to='/sign' className='option'>
-          SIGN IN
-        </Link>
+        {currentUser ? (
+          <div className='option' onClick={handleSignOut}>
+            SIGN OUT
+          </div>
+        ) : (
+          <Link to='/sign' className='option'>
+            SIGN IN
+          </Link>
+        )}
       </div>
     </div>
   );
+};
+
+Navbar.propTypes = {
+  currentUser: PropTypes.object,
 };
 
 export default Navbar;
