@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
@@ -41,7 +42,11 @@ const Navbar = ({ currentUser }) => {
 };
 
 Navbar.propTypes = {
-  currentUser: PropTypes.object,
+  currentUser: PropTypes.any,
 };
 
-export default Navbar;
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser,
+});
+
+export default connect(mapStateToProps)(Navbar);
