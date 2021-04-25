@@ -12,7 +12,6 @@ const Navbar = ({ currentUser }) => {
   const handleSignOut = () => {
     auth.signOut();
   };
-
   return (
     <div className='navbar'>
       <div className='logo-container'>
@@ -32,7 +31,7 @@ const Navbar = ({ currentUser }) => {
             SIGN OUT
           </div>
         ) : (
-          <Link to='/sign' className='option'>
+          <Link to='/sign-in' className='option'>
             SIGN IN
           </Link>
         )}
