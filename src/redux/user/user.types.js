@@ -1,5 +1,5 @@
-const USER_TYPES = {
+const USER_ACTIONS_TYPES = {
   SET_CURRENT_USER: 'SET_CURRENT_USER',
 };
 
-export default USER_TYPES;
+export default USER_ACTIONS_TYPES;

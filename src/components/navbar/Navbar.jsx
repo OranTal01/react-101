@@ -3,15 +3,20 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+//logo
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
+// style
 import './navbar.style.scss';
 
+//firebase
 import { auth } from '../../firebase/firebase.utils';
 
+// components
 import CartIcon from '../cart-icon/CartIcon';
+import CartDropdown from '../cart-dropdown/CartDropdown';
 
-const Navbar = ({ currentUser }) => {
+const Navbar = ({ currentUser, hideCartDropdown }) => {
   const handleSignOut = () => {
     auth.signOut();
   };
@@ -40,16 +45,22 @@ const Navbar = ({ currentUser }) => {
         )}
         <CartIcon />
       </div>
+      {hideCartDropdown && <CartDropdown />}
     </div>
   );
 };
 
 Navbar.propTypes = {
   currentUser: PropTypes.any,
+  hideCartDropdown: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
-  currentUser: state.user.currentUser,
+const mapStateToProps = ({
+  user: { currentUser },
+  cart: { hideCartDropdown },
+}) => ({
+  currentUser,
+  hideCartDropdown,
 });
 
 export default connect(mapStateToProps)(Navbar);
