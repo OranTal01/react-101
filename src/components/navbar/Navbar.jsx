@@ -6,7 +6,10 @@ import { connect } from 'react-redux';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import './navbar.style.scss';
+
 import { auth } from '../../firebase/firebase.utils';
+
+import CartIcon from '../cart-icon/CartIcon';
 
 const Navbar = ({ currentUser }) => {
   const handleSignOut = () => {
@@ -35,6 +38,7 @@ const Navbar = ({ currentUser }) => {
             SIGN IN
           </Link>
         )}
+        <CartIcon />
       </div>
     </div>
   );
