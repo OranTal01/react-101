@@ -5,7 +5,7 @@ import { addItemToCart } from './cart.utils';
 
 const initialState = {
   hideCartDropdown: false,
-  items: [],
+  cartItems: [],
 };
 
 const cartReducer = (state = initialState, { type, payload }) => {
@@ -13,7 +13,7 @@ const cartReducer = (state = initialState, { type, payload }) => {
     case CART_ACTIONS_TYPES.TOGGLE_CART_DROPDOWN:
       return { ...state, hideCartDropdown: !state.hideCartDropdown };
     case CART_ACTIONS_TYPES.ADD_ITEM:
-      return { ...state, items: addItemToCart(state.items, payload) };
+      return { ...state, cartItems: addItemToCart(state.cartItems, payload) };
 
     default:
       return state;
