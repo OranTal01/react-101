@@ -18,10 +18,11 @@ import Navbar from './components/navbar/Navbar';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/SignInAndSignUpPage';
 
 // actions
-
 import { setCurrentUser } from './redux/user/user.actions';
-
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+
+// selectors memorization
+import { selectCurrentUser } from './redux/user/user.selectors';
 
 class App extends Component {
   unSubscribeFromAuth = null;
@@ -80,7 +81,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  currentUser: state.user.currentUser,
+  currentUser: selectCurrentUser(state),
 });
 
 const mapDispatchToProps = dispatch => ({

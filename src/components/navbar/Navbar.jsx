@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+// import { createStructuredSelector } from 'reselect';
 
 //logo
 import { ReactComponent as Logo } from '../../assets/crown.svg';
@@ -15,6 +16,8 @@ import { auth } from '../../firebase/firebase.utils';
 // components
 import CartIcon from '../cart-icon/CartIcon';
 import CartDropdown from '../cart-dropdown/CartDropdown';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { selectHideCartDropdown } from '../../redux/cart/cart.selectors';
 
 const Navbar = ({ currentUser, hideCartDropdown }) => {
   const handleSignOut = () => {
@@ -55,12 +58,15 @@ Navbar.propTypes = {
   hideCartDropdown: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({
-  user: { currentUser },
-  cart: { hideCartDropdown },
-}) => ({
-  currentUser,
-  hideCartDropdown,
+// if we have a lot of states so we can use createStructuredSelector from reselect
+// const mapStateToProps = createStructuredSelector ({
+//   currentUser: selectCurrentUser,
+//   hideCartDropdown: selectHideCartDropdown,
+// });
+
+const mapStateToProps = state => ({
+  currentUser: selectCurrentUser(state),
+  hideCartDropdown: selectHideCartDropdown(state),
 });
 
 export default connect(mapStateToProps)(Navbar);
