@@ -1,29 +1,33 @@
-import React, { Component, Fragment } from 'react';
+//dependencies
+import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
+//style
 import './shop-page.style.scss';
 
-import SHOP_DATA from './shop-data';
-
+//components
 import CollectionPreview from '../../components/collection-preview/CollectionPreview';
 
-class ShopPage extends Component {
-  constructor() {
-    super();
+//selectors
+import { selectCollections } from '../../redux/shop/shop.selectors';
 
-    this.state = {
-      collections: SHOP_DATA,
-    };
-  }
+const ShopPage = ({ collections }) => {
+  return (
+    <Fragment>
+      {collections.map(collections => (
+        <CollectionPreview key={collections.id} collections={collections} />
+      ))}
+    </Fragment>
+  );
+};
 
-  render() {
-    return (
-      <Fragment>
-        {this.state.collections.map(collections => (
-          <CollectionPreview key={collections.id} collections={collections} />
-        ))}
-      </Fragment>
-    );
-  }
-}
+ShopPage.propTypes = {
+  collections: PropTypes.array.isRequired,
+};
 
-export default ShopPage;
+const mapStateToProps = state => ({
+  collections: selectCollections(state),
+});
+
+export default connect(mapStateToProps)(ShopPage);
