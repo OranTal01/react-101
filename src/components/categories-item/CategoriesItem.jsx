@@ -1,11 +1,17 @@
+//dependencies
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
+//style
 import './categories-item.style.scss';
 
-const CategoriesItem = ({ categories: { title, size, imageUrl } }) => {
+const CategoriesItem = ({ categorize, match, history }) => {
+  const { title, size, imageUrl, linkUrl } = categorize;
   return (
-    <div className={`categories-item ${size}`}>
+    <div
+      className={`categories-item ${size}`}
+      onClick={() => history.push(`${match.url}${linkUrl}`)}>
       <div
         className='background-image'
         style={{ backgroundImage: `url(${imageUrl})` }}></div>
@@ -18,7 +24,7 @@ const CategoriesItem = ({ categories: { title, size, imageUrl } }) => {
 };
 
 CategoriesItem.propTypes = {
-  categories: PropTypes.object.isRequired,
+  categorize: PropTypes.object.isRequired,
 };
 
-export default CategoriesItem;
+export default withRouter(CategoriesItem);

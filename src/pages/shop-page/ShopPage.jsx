@@ -1,33 +1,23 @@
 //dependencies
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { Route } from 'react-router-dom';
 
 //style
 import './shop-page.style.scss';
 
 //components
-import CollectionPreview from '../../components/collection-preview/CollectionPreview';
+import CollectionsOverview from '../../components/collections-overview/CollectionsOverview';
 
-//selectors
-import { selectCollections } from '../../redux/shop/shop.selectors';
+//pages
+import CollectionPage from '../collection-page/CollectionPage';
 
-const ShopPage = ({ collections }) => {
+const ShopPage = ({ match }) => {
   return (
     <Fragment>
-      {collections.map(collections => (
-        <CollectionPreview key={collections.id} collections={collections} />
-      ))}
+      <Route exact path={`${match.path}`} component={CollectionsOverview} />
+      <Route path={`${match.path}/:collectionId`} component={CollectionPage} />
     </Fragment>
   );
 };
 
-ShopPage.propTypes = {
-  collections: PropTypes.array.isRequired,
-};
-
-const mapStateToProps = state => ({
-  collections: selectCollections(state),
-});
-
-export default connect(mapStateToProps)(ShopPage);
+export default ShopPage;
