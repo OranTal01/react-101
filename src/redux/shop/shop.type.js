@@ -1,0 +1,5 @@
+const SHOP_ACTION_TYPE = {
+  SET_COLLECTIONS: 'SET_COLLECTIONS',
+};
+
+export default SHOP_ACTION_TYPE;

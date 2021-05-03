@@ -20,16 +20,23 @@ import CheckoutPage from './pages/checkout-page/CheckoutPage';
 
 // actions
 import { setCurrentUser } from './redux/user/user.actions';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+
+//firebase
+import {
+  auth,
+  createUserProfileDocument,
+  addCollectionAndDocuments,
+} from './firebase/firebase.utils';
 
 // selectors memorization
 import { selectCurrentUser } from './redux/user/user.selectors';
+import { selectCollectionsForOverview } from './redux/shop/shop.selectors';
 
 class App extends Component {
   unSubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, collections } = this.props;
 
     this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
@@ -45,6 +52,8 @@ class App extends Component {
         setCurrentUser(userAuth);
       }
     });
+    //to set in firebase collection items just once
+    // addCollectionAndDocuments('collections', collections);
   }
 
   componentWillUnmount() {
@@ -84,6 +93,7 @@ App.propTypes = {
 
 const mapStateToProps = state => ({
   currentUser: selectCurrentUser(state),
+  collections: selectCollectionsForOverview(state),
 });
 
 const mapDispatchToProps = dispatch => ({
