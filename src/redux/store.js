@@ -1,14 +1,19 @@
 import { createStore, applyMiddleware } from 'redux';
-
-//tool for see in the console all the actions and state that fire in the console
-import logger from 'redux-logger';
-
-//tool for local storage
+//store alle the store in local storage
 import { persistStore } from 'redux-persist';
+//logs all the actions to the console
+import logger from 'redux-logger';
+//dispatch async action to reducers
+import thunk from 'redux-thunk';
 
 import rootReducer from './root.reducer';
 
-const middleware = [logger];
+const middlewares = [thunk];
 
-export const store = createStore(rootReducer, applyMiddleware(...middleware));
+if (process.env.NODE_ENV === 'development') {
+  middlewares.push(logger);
+}
+
+export const store = createStore(rootReducer, applyMiddleware(...middlewares));
+
 export const persistor = persistStore(store);

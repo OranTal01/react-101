@@ -22,11 +22,7 @@ import CheckoutPage from './pages/checkout-page/CheckoutPage';
 import { setCurrentUser } from './redux/user/user.actions';
 
 //firebase
-import {
-  auth,
-  createUserProfileDocument,
-  addCollectionAndDocuments,
-} from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 // selectors memorization
 import { selectCurrentUser } from './redux/user/user.selectors';
@@ -36,7 +32,7 @@ class App extends Component {
   unSubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser, collections } = this.props;
+    const { setCurrentUser } = this.props;
 
     this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
