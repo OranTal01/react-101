@@ -10,8 +10,8 @@ import './shop-page.style.scss';
 import CollectionsOverview from '../../components/collections-overview/CollectionsOverview';
 import Spinner from '../../components/spinner/Spinner';
 
-//actions
-import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+//actions sagas
+import { fetchCollectionsStart } from '../../redux/shop/shop.actions';
 
 //pages
 import CollectionPage from '../collection-page/CollectionPage';
@@ -26,8 +26,8 @@ const CollectionsOverviewWithSpinner = Spinner(CollectionsOverview);
 const CollectionPageWithSpinner = Spinner(CollectionPage);
 class ShopPage extends Component {
   componentDidMount() {
-    const { fetchCollectionsStartAsync } = this.props;
-    fetchCollectionsStartAsync();
+    const { fetchCollectionsStart } = this.props;
+    fetchCollectionsStart();
   }
 
   render() {
@@ -61,7 +61,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync()),
+  fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
