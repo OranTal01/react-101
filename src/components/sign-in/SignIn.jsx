@@ -1,14 +1,21 @@
+//dependencies
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
+//style
 import './sign-in.style.scss';
 
+//components
 import FormInput from '../form-input/FormInput';
 import CustomButton from '../custom-button/CustomButton';
 
-import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
-import { withRouter } from 'react-router';
-
+//actions
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from '../../redux/user/user.actions';
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -19,18 +26,12 @@ class SignIn extends Component {
     };
   }
 
-  handleOnSubmit = async e => {
+  handleOnSubmit = e => {
     const { email, password } = this.state;
+    const { emailSignInStart } = this.props;
     e.preventDefault();
-
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-
-      this.setState({ email: '', password: '' });
-      this.props.history.push('/');
-    } catch (error) {
-      console.log(error.message);
-    }
+    emailSignInStart({ email, password });
+    this.props.history.push('/');
   };
 
   handleOnChange = e => {
@@ -40,7 +41,8 @@ class SignIn extends Component {
   };
 
   handleSignInWithGoogle = () => {
-    signInWithGoogle();
+    const { googleSignInStart } = this.props;
+    googleSignInStart();
     this.props.history.push('/');
   };
 
@@ -87,4 +89,10 @@ SignIn.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default withRouter(SignIn);
+const mapDispatchToProps = dispatch => ({
+  googleSignInStart: () => dispatch(googleSignInStart()),
+  emailSignInStart: ({ email, password }) =>
+    dispatch(emailSignInStart({ email, password })),
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(SignIn));

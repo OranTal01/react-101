@@ -1,3 +1,4 @@
+//dependencies
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -10,18 +11,18 @@ import { ReactComponent as Logo } from '../../assets/crown.svg';
 // style
 import './navbar.style.scss';
 
-//firebase
-import { auth } from '../../firebase/firebase.utils';
-
 // components
 import CartIcon from '../cart-icon/CartIcon';
 import CartDropdown from '../cart-dropdown/CartDropdown';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { selectHideCartDropdown } from '../../redux/cart/cart.selectors';
 
-const Navbar = ({ currentUser, hideCartDropdown }) => {
+//actions
+import { signOutStart } from '../../redux/user/user.actions';
+
+const Navbar = ({ currentUser, hideCartDropdown, signOutStart }) => {
   const handleSignOut = () => {
-    auth.signOut();
+    signOutStart();
   };
   return (
     <div className='navbar'>
@@ -69,4 +70,8 @@ const mapStateToProps = state => ({
   hideCartDropdown: selectHideCartDropdown(state),
 });
 
-export default connect(mapStateToProps)(Navbar);
+const mapDispatchToProps = dispatch => ({
+  signOutStart: () => dispatch(signOutStart()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

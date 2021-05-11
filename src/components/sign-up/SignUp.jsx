@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
 
+//style
 import './sign-up.style.scss';
 
+//components
 import FormInput from '../form-input/FormInput';
 import CustomButton from '../custom-button/CustomButton';
 import { withRouter } from 'react-router';
 
+//actions
+import { signUpStart } from '../../redux/user/user.actions';
+import { connect } from 'react-redux';
 class SignUp extends Component {
   constructor(props) {
     super();
@@ -19,8 +23,9 @@ class SignUp extends Component {
     };
   }
 
-  handleSubmit = async e => {
+  handleSubmit = (e) => {
     const { displayName, email, password, confirmPassword } = this.state;
+    const { signUpStart } = this.props;
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -28,28 +33,19 @@ class SignUp extends Component {
       return;
     }
 
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password,
-      );
+    signUpStart({ email, password, displayName });
 
-      await createUserProfileDocument(user, { displayName });
+    this.setState({
+      displayName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    });
 
-      this.setState({
-        displayName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      });
-
-      this.props.history.push('/');
-    } catch (error) {
-      console.error(error);
-    }
+    this.props.history.push('/');
   };
 
-  handleOnChange = e => {
+  handleOnChange = (e) => {
     const { value, name } = e.target;
 
     this.setState({ [name]: value });
@@ -105,4 +101,8 @@ class SignUp extends Component {
   }
 }
 
-export default withRouter(SignUp);
+const mapDispatchToProps = (dispatch) => ({
+  signUpStart: (userCredentials) => dispatch(signUpStart(userCredentials)),
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(SignUp));

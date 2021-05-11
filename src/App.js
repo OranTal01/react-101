@@ -1,3 +1,4 @@
+//dependencies
 import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
@@ -5,7 +6,7 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // styles
@@ -18,11 +19,11 @@ import Navbar from './components/navbar/Navbar';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/SignInAndSignUpPage';
 import CheckoutPage from './pages/checkout-page/CheckoutPage';
 
-// actions
-import { setCurrentUser } from './redux/user/user.actions';
+//actions
+import { checkUserSession } from './redux/user/user.actions';
 
 //firebase
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+// import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 // selectors memorization
 import { selectCurrentUser } from './redux/user/user.selectors';
@@ -32,29 +33,28 @@ class App extends Component {
   unSubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
-
-    this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
-
-        userRef.onSnapshot(snapShot => {
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data(),
-          });
-        });
-      } else {
-        setCurrentUser(userAuth);
-      }
-    });
+    const { checkUserSession } = this.props;
+    checkUserSession();
+    // this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+    //   if (userAuth) {
+    //     const userRef = await createUserProfileDocument(userAuth);
+    //     userRef.onSnapshot(snapShot => {
+    //       setCurrentUser({
+    //         id: snapShot.id,
+    //         ...snapShot.data(),
+    //       });
+    //     });
+    //   } else {
+    //     setCurrentUser(userAuth);
+    //   }
+    // });
     //to set in firebase collection items just once
     // addCollectionAndDocuments('collections', collections);
   }
 
-  componentWillUnmount() {
-    this.unSubscribeFromAuth();
-  }
+  // componentWillUnmount() {
+  //   this.unSubscribeFromAuth();
+  // }
 
   render() {
     return (
@@ -83,16 +83,17 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
-  setCurrentUser: PropTypes.func.isRequired,
-};
+// App.propTypes = {
+//   setCurrentUser: PropTypes.func.isRequired,
+// };
+
+const mapDispatchToProps = dispatch => ({
+  checkUserSession: () => dispatch(checkUserSession()),
+});
 
 const mapStateToProps = state => ({
   currentUser: selectCurrentUser(state),
   collections: selectCollectionsForOverview(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user)),
-});
 export default connect(mapStateToProps, mapDispatchToProps)(App);
