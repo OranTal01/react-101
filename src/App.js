@@ -1,5 +1,5 @@
 //dependencies
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -29,69 +29,45 @@ import { checkUserSession } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { selectCollectionsForOverview } from './redux/shop/shop.selectors';
 
-class App extends Component {
-  unSubscribeFromAuth = null;
-
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+const App = ({ checkUserSession }) => {
+  useEffect(() => {
     checkUserSession();
-    // this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-    //   if (userAuth) {
-    //     const userRef = await createUserProfileDocument(userAuth);
-    //     userRef.onSnapshot(snapShot => {
-    //       setCurrentUser({
-    //         id: snapShot.id,
-    //         ...snapShot.data(),
-    //       });
-    //     });
-    //   } else {
-    //     setCurrentUser(userAuth);
-    //   }
-    // });
-    //to set in firebase collection items just once
-    // addCollectionAndDocuments('collections', collections);
-  }
+  }, [checkUserSession]);
 
-  // componentWillUnmount() {
-  //   this.unSubscribeFromAuth();
-  // }
-
-  render() {
-    return (
-      <div>
-        <Router>
-          <Navbar />
-          <Switch>
-            <Route exact path='/' component={HomePage} />
-            <Route path='/shop' component={ShopPage} />
-            <Route exact path='/checkout' component={CheckoutPage} />
-            <Route
-              exact
-              path='/sign-in'
-              render={() =>
-                this.props.currentUser ? (
-                  <Redirect to='/' />
-                ) : (
-                  <SignInAndSignUpPage />
-                )
-              }
-            />
-          </Switch>
-        </Router>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Router>
+        <Navbar />
+        <Switch>
+          <Route exact path='/' component={HomePage} />
+          <Route path='/shop' component={ShopPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
+          <Route
+            exact
+            path='/sign-in'
+            render={() =>
+              this.props.currentUser ? (
+                <Redirect to='/' />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            }
+          />
+        </Switch>
+      </Router>
+    </div>
+  );
+};
 
 // App.propTypes = {
 //   setCurrentUser: PropTypes.func.isRequired,
 // };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   checkUserSession: () => dispatch(checkUserSession()),
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentUser: selectCurrentUser(state),
   collections: selectCollectionsForOverview(state),
 });
