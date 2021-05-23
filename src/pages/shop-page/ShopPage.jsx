@@ -1,69 +1,47 @@
 //dependencies
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect, lazy, Suspense, Fragment } from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+
+//actions
+import { fetchCollectionsStart } from '../../redux/shop/shop.actions';
 
 //style
 import './shop-page.style.scss';
 
 //components
-import CollectionsOverview from '../../components/collections-overview/CollectionsOverview';
 import Spinner from '../../components/spinner/Spinner';
+const CollectionsOverviewContainer = lazy(() =>
+  import('../../components/collections-overview/CollectionsOverview'),
+);
+const CollectionPageContainer = lazy(() =>
+  import('../collection-page/CollectionPage'),
+);
 
-//actions sagas
-import { fetchCollectionsStart } from '../../redux/shop/shop.actions';
-
-//pages
-import CollectionPage from '../collection-page/CollectionPage';
-
-//selectors
-import {
-  selectIsFetchingCollections,
-  selectIsCollectionsLoaded,
-} from '../../redux/shop/shop.selectors.js';
-
-const CollectionsOverviewWithSpinner = Spinner(CollectionsOverview);
-const CollectionPageWithSpinner = Spinner(CollectionPage);
-
-const ShopPage = ({
-  fetchCollectionsStart,
-  match,
-  isFetching,
-  isCollectionsLoaded,
-}) => {
+export const ShopPage = ({ fetchCollectionsStart, match }) => {
   useEffect(() => {
     fetchCollectionsStart();
   }, [fetchCollectionsStart]);
 
   return (
     <Fragment>
-      <Route
-        exact
-        path={`${match.path}`}
-        render={(props) => (
-          <CollectionsOverviewWithSpinner isLoading={isFetching} {...props} />
-        )}
-      />
-      <Route
-        path={`${match.path}/:collectionId`}
-        render={(props) => (
-          <CollectionPageWithSpinner
-            isLoading={!isCollectionsLoaded}
-            {...props}
-          />
-        )}
-      />
+      <Suspense fallback={<Spinner />}>
+        <Route
+          exact
+          path={`${match.path}`}
+          component={CollectionsOverviewContainer}
+        />
+        <Route
+          path={`${match.path}/:collectionId`}
+          component={CollectionPageContainer}
+        />
+      </Suspense>
     </Fragment>
   );
 };
-
-const mapStateToProps = (state) => ({
-  isFetching: selectIsFetchingCollections(state),
-  isCollectionsLoaded: selectIsCollectionsLoaded(state),
-});
 
 const mapDispatchToProps = (dispatch) => ({
   fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
+export default connect(null, mapDispatchToProps)(ShopPage);
