@@ -1,38 +1,29 @@
-//dependencies
+//dependance
 import React, { useEffect, lazy, Suspense } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from 'react-router-dom';
-// import PropTypes from 'prop-types';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
-// styles
-import './App.css';
+// components
+import Header from './components/header/header.component';
+import Spinner from './components/spinner/spinner';
+import ErrorBoundary from './components/error-boundary/ErrorBoundary';
+
+//styles
+import { GlobalStyle } from './global.styles';
+
+//selectors
+import { selectCurrentUser } from './redux/user/user.selectors';
 
 //actions
 import { checkUserSession } from './redux/user/user.actions';
 
-//firebase
-// import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-
-// selectors memorization
-import { selectCurrentUser } from './redux/user/user.selectors';
-import { selectCollectionsForOverview } from './redux/shop/shop.selectors';
-
-// components
-import Navbar from './components/navbar/Navbar';
-import Spinner from './components/spinner/Spinner';
-import ErrorBoundary from './components/error-boundary/ErrorBoundary';
-
-const HomePage = lazy(() => import('./pages/home-page/Home'));
-const ShopPage = lazy(() => import('./pages/shop-page/ShopPage'));
+const HomePage = lazy(() => import('./pages/homepage/homepage.component'));
+const ShopPage = lazy(() => import('./pages/shop/shop.component'));
 const SignInAndSignUpPage = lazy(() =>
-  import('./pages/sign-in-and-sign-up-page/SignInAndSignUpPage'),
+  import('./pages/sign-in-and-sign-up/sign-in-and-sign-up.component'),
 );
-const CheckoutPage = lazy(() => import('./pages/checkout-page/CheckoutPage'));
+const CheckoutPage = lazy(() => import('./pages/checkout/checkout.component'));
 
 const App = ({ checkUserSession, currentUser }) => {
   useEffect(() => {
@@ -41,40 +32,34 @@ const App = ({ checkUserSession, currentUser }) => {
 
   return (
     <div>
-      <Router>
-        <Navbar />
-        <Switch>
-          <ErrorBoundary>
-            <Suspense fallback={<Spinner />}>
-              <Route exact path='/' component={HomePage} />
-              <Route path='/shop' component={ShopPage} />
-              <Route exact path='/checkout' component={CheckoutPage} />
-              <Route
-                exact
-                path='/sign-in'
-                render={() =>
-                  currentUser ? <Redirect to='/' /> : <SignInAndSignUpPage />
-                }
-              />
-            </Suspense>
-          </ErrorBoundary>
-        </Switch>
-      </Router>
+      <GlobalStyle />
+      <Header />
+      <Switch>
+        <ErrorBoundary>
+          <Suspense fallback={<Spinner />}>
+            <Route exact path='/' component={HomePage} />
+            <Route path='/shop' component={ShopPage} />
+            <Route exact path='/checkout' component={CheckoutPage} />
+            <Route
+              exact
+              path='/signin'
+              render={() =>
+                currentUser ? <Redirect to='/' /> : <SignInAndSignUpPage />
+              }
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </Switch>
     </div>
   );
 };
 
-// App.propTypes = {
-//   setCurrentUser: PropTypes.func.isRequired,
-// };
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   checkUserSession: () => dispatch(checkUserSession()),
-});
-
-const mapStateToProps = (state) => ({
-  currentUser: selectCurrentUser(state),
-  collections: selectCollectionsForOverview(state),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

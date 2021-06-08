@@ -1,15 +1,13 @@
-//dependencies
+//dependance
 import React from 'react';
 
-//style
-import './spinner.style.scss';
-
-//hoc
+//styles
+import { SpinnerOverlay, SpinnerContainer } from './spinner.style';
 const Spinner = () => {
   return (
-    <div className='spinner-overlay'>
-      <div className='spinner-container'></div>
-    </div>
+    <SpinnerOverlay>
+      <SpinnerContainer></SpinnerContainer>
+    </SpinnerOverlay>
   );
 };
 

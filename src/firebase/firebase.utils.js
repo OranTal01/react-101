@@ -2,19 +2,17 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyDml_F8CdWBdeZxtIzLdckYQCJLvlHpPZ0',
-  authDomain: 'crwn-db-7414b.firebaseapp.com',
-  projectId: 'crwn-db-7414b',
-  storageBucket: 'crwn-db-7414b.appspot.com',
-  messagingSenderId: '6713433618',
-  appId: '1:6713433618:web:c50813683ba90d6c1282cb',
+const config = {
+  apiKey: 'AIzaSyCdHT-AYHXjF7wOrfAchX4PIm3cSj5tn14',
+  authDomain: 'crwn-db.firebaseapp.com',
+  databaseURL: 'https://crwn-db.firebaseio.com',
+  projectId: 'crwn-db',
+  storageBucket: 'crwn-db.appspot.com',
+  messagingSenderId: '850995411664',
+  appId: '1:850995411664:web:7ddc01d597846f65'
 };
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
+firebase.initializeApp(config);
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
@@ -31,7 +29,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
         displayName,
         email,
         createdAt,
-        ...additionalData,
+        ...additionalData
       });
     } catch (error) {
       console.log('error creating user', error.message);
@@ -43,7 +41,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
 export const addCollectionAndDocuments = async (
   collectionKey,
-  objectsToAdd,
+  objectsToAdd
 ) => {
   const collectionRef = firestore.collection(collectionKey);
 
@@ -58,9 +56,13 @@ export const addCollectionAndDocuments = async (
 
 export const convertCollectionsSnapshotToMap = collections => {
   const transformedCollection = collections.docs.map(doc => {
+    const { title, items } = doc.data();
+
     return {
+      routeName: encodeURI(title.toLowerCase()),
       id: doc.id,
-      ...doc.data(),
+      title,
+      items
     };
   });
 
@@ -78,6 +80,9 @@ export const getCurrentUser = () => {
     }, reject);
   });
 };
+
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();
 
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
